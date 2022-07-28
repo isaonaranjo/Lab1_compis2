@@ -9,8 +9,9 @@ programBlock:
 classDEF : 
     CLASS TYPEID (INHERITS TYPEID)? '{' (feature ';')* '}';
 feature : 
-    (OBJECTID) '(' (formal (','formal)*)? ')' ':' TYPEID '{' expr '}'
-    | OBJECTID ':' TYPEID (ASIGNOPP expr)?;
+    (OBJECTID) '(' (formal (','formal)*)? ')' ':' TYPEID '{' expr '}' #methodDEF
+    | OBJECTID ':' TYPEID (ASIGNOPP expr)? #featureDEF
+    ; 
 formal:
     OBJECTID ':' TYPEID;
 expr :

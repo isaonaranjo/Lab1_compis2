@@ -24,8 +24,13 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#feature.
-    def visitFeature(self, ctx:YAPLParser.FeatureContext):
+    # Visit a parse tree produced by YAPLParser#methodDEF.
+    def visitMethodDEF(self, ctx:YAPLParser.MethodDEFContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#featureDEF.
+    def visitFeatureDEF(self, ctx:YAPLParser.FeatureDEFContext):
         return self.visitChildren(ctx)
 
 

@@ -1,12 +1,12 @@
 # code extracted from -> https://faun.pub/introduction-to-antlr-python-af8a3c603d23
 
 import sys
-import os
+from tabulate import tabulate
 from antlr4 import *
 from antlr4.InputStream import InputStream
 from YAPLLexer import YAPLLexer
 from YAPLParser import YAPLParser
-from YAPLVisitor import YAPLVisitor
+from MyYAPLVisitor import MyYAPLVisitor
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -20,10 +20,23 @@ if __name__ == "__main__":
     # parser
     parser = YAPLParser(stream)
     tree = parser.program()
-    
-    lisp_tree_str = tree.toStringTree(recog=parser)
-    print(lisp_tree_str)
-    #evaluator
-    visitor = YAPLVisitor()
-    output = visitor.visit(tree)
-    print(output)
+
+    # evaluator
+    visitor = MyYAPLVisitor()
+    visitor.visit(tree)
+
+    print(30*"=" + " Symbols Table " + 30*"=")
+    print("\n")
+    print(30*"-" + " Classes " + 30*"-")
+    for myClass in visitor.classTable.entries:
+        print(myClass)
+    print("\n")
+    print(30*"-" + " Attributes " + 30*"-")
+    for myAttribute in visitor.attributeTable.entries:
+        print(myAttribute)
+    print("\n")
+    print(30*"-" + " Functions " + 30*"-")
+    for myFunction in visitor.functionTable.entries:
+        print(myFunction)
+    print("\n")
+    print(30*"=" + " End of Table " + 30*"=")
