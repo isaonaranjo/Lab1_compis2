@@ -2,23 +2,20 @@ from YAPLParser import YAPLParser
 from YAPLVisitor import YAPLVisitor
 
 # This class defines a complete generic visitor for a parse tree produced by YAPL2Parser.
-from objects.ClassObject import ClassObject
-from objects.AtributeObject import AtributeObject
-from objects.FunctionObject import FunctionObject
+from objects.Class import Class
+from objects.Attribute import Attribute
+from objects.Function import Function
 
-from tables.ClassTable import ClassTable
-from tables.AttributeTable import AttributeTable
-from tables.FunctionTable import FunctionTable
+from tables.SymbolsTable import SymbolsTable
 
 CURR_CLASS = ""
 CURR_METHOD = ""
 CURR_SCOPE = 1
+CURR_ID = 1000
 
 class MyYAPLVisitor(YAPLVisitor):
     def __init__(self):
-        self.classTable = ClassTable()
-        self.attributeTable = AttributeTable()
-        self.functionTable = FunctionTable()
+        self.table = SymbolsTable()
 
     # Visit a parse tree produced by YAPLParser#program.
     def visitProgram(self, ctx:YAPLParser.ProgramContext):
@@ -34,8 +31,8 @@ class MyYAPLVisitor(YAPLVisitor):
     def visitClassDEF(self, ctx:YAPLParser.ClassDEFContext):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
         className = ctx.TYPEID()[0]
-        entry = ClassObject(className)
-        self.classTable.add(entry)
+        entry = Class(className)
+        self.table.addClass(entry)
         CURR_CLASS = className
         CURR_SCOPE = 1
         CURR_METHOD = None
@@ -47,8 +44,8 @@ class MyYAPLVisitor(YAPLVisitor):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
         methodName = ctx.OBJECTID()
         methodType = ctx.TYPEID()
-        entry = FunctionObject(methodName, methodType, None, CURR_SCOPE, CURR_CLASS)
-        self.functionTable.add(entry)
+        entry = Function(CURR_ID, methodName, methodType, CURR_SCOPE, CURR_CLASS)
+        self.table.addFunction(entry)
         CURR_SCOPE = 2
         CURR_METHOD = methodName
         return self.visitChildren(ctx)
@@ -59,8 +56,8 @@ class MyYAPLVisitor(YAPLVisitor):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
         featureName = ctx.OBJECTID()
         featureType = ctx.TYPEID()
-        entry = AtributeObject(featureName, featureType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
-        self.attributeTable.add(entry)
+        entry = Attribute(featureName, featureType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
+        self.table.addAttribute(entry)
         return self.visitChildren(ctx)
 
 
@@ -69,8 +66,8 @@ class MyYAPLVisitor(YAPLVisitor):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
         formalName = ctx.OBJECTID()
         formalType = ctx.TYPEID()
-        entry = AtributeObject(formalName, formalType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
-        self.attributeTable.add(entry)
+        entry = Attribute(formalName, formalType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
+        self.table.addAttribute(entry)
         return self.visitChildren(ctx)
 
 

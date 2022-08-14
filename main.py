@@ -28,15 +28,15 @@ if __name__ == "__main__":
     print(30*"=" + " Symbols Table " + 30*"=")
     print("\n")
     print(30*"-" + " Classes " + 30*"-")
-    for myClass in visitor.classTable.entries:
+    for myClass in visitor.table.classes:
         print(myClass)
     print("\n")
-    print(30*"-" + " Attributes " + 30*"-")
-    for myAttribute in visitor.attributeTable.entries:
-        print(myAttribute)
-    print("\n")
     print(30*"-" + " Functions " + 30*"-")
-    for myFunction in visitor.functionTable.entries:
+    for myFunction in visitor.table.attributes:
         print(myFunction)
+    print("\n")
+    print(30*"-" + " Attributes " + 30*"-")
+    for myAttribute in visitor.table.functions:
+        print(myAttribute)
     print("\n")
     print(30*"=" + " End of Table " + 30*"=")
