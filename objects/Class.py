@@ -8,4 +8,4 @@ class Class:
         self.inheritsFrom = inheritsFrom
     
     def __str__(self):
-        return 'name: %s, inheritsFrom: %s' % (self.name, self.inheritsFrom)
+        return '[CLASS] -> Identifier: %s, inheritsFrom: %s' % (self.name, self.inheritsFrom)

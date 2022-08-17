@@ -2,13 +2,16 @@ from objects.Class import Class
 from objects.Function import Function
 from objects.Attribute import Attribute
 
-from utils.constants import INT, STRING, BOOL, VOID, OBJECT
+from utils.predefinedTypes import *
+from utils.predefinedClasses import *
+from utils.predefinedFunctions import *
+from utils.predefinedAttributes import *
 
 class SymbolsTable:
     def __init__(self):
-        self.classes = []
-        self.functions = []
-        self.attributes = []
+        self.classes = [OBJECT_CLASS, IO_CLASS, INT_CLASS, STRING_CLASS, BOOL_CLASS]
+        self.functions = [ABORT, IN_INT, LENGTH, OUT_INT, SUBSTRING, TYPE_NAME, COPY, OUT_STRING, OUT_INT, IN_STRING, IN_INT, LENGTH, CONCAT, SUBSTRING]
+        self.attributes = [OUT_STRING_ATTR, OUT_INT_ATTR, CONCAT_ATTR, SUBSTRING_START_ATTR, SUBSTRING_END_ATTR]
         self.types = [INT, STRING, BOOL, VOID, OBJECT]
 
     def findClass(

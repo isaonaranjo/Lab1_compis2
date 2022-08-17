@@ -14,4 +14,4 @@ class Function:
         self.belongsTo = belongsTo
 
     def __str__(self):
-        return 'Name: %s, type: %s, scope: %s, belongsTo: %s' % (self.name, self.type, self.scope, self.belongsTo)
+        return '[FUNCTION] -> identifier: %s, type: %s, scope: %s, belongsTo: %s' % (self.name, self.type, self.scope, self.belongsTo)

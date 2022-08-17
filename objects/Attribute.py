@@ -16,4 +16,4 @@ class Attribute:
         self.isParameter = isParameter
 
     def __str__(self):
-        return 'name: %s, type: %s, scope: %s, insideClass: %s, insideMethod: %s, isParameter: %s' % (self.name, self.type, self.scope, self.insideClass, self.insideMethod, self.isParameter)
+        return '[ATTRIBUTE] -> identifier: %s, type: %s, scope: %s, insideClass: %s, insideMethod: %s, isParameter: %s' % (self.name, self.type, self.scope, self.insideClass, self.insideMethod, self.isParameter)

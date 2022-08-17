@@ -1,7 +1,7 @@
 from YAPLParser import YAPLParser
 from YAPLVisitor import YAPLVisitor
 
-# This class defines a complete generic visitor for a parse tree produced by YAPL2Parser.
+# This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 from objects.Class import Class
 from objects.Attribute import Attribute
 from objects.Function import Function
@@ -11,26 +11,26 @@ from tables.SymbolsTable import SymbolsTable
 CURR_CLASS = ""
 CURR_METHOD = ""
 CURR_SCOPE = 1
-CURR_ID = 1000
+CURR_ID = 10
 
 class MyYAPLVisitor(YAPLVisitor):
     def __init__(self):
         self.table = SymbolsTable()
+
+    # Visit a parse tree produced by YAPLParser#start.
+    def visitStart(self, ctx:YAPLParser.StartContext):
+        return self.visitChildren(ctx)
+
 
     # Visit a parse tree produced by YAPLParser#program.
     def visitProgram(self, ctx:YAPLParser.ProgramContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#programBlock.
-    def visitProgramBlock(self, ctx:YAPLParser.ProgramBlockContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#classDEF.
-    def visitClassDEF(self, ctx:YAPLParser.ClassDEFContext):
+    # Visit a parse tree produced by YAPLParser#classExpr.
+    def visitClassExpr(self, ctx:YAPLParser.ClassExprContext):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        className = ctx.TYPEID()[0]
+        className = ctx.TYPE()[0]
         entry = Class(className)
         self.table.addClass(entry)
         CURR_CLASS = className
@@ -39,11 +39,11 @@ class MyYAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#methodDEF.
-    def visitMethodDEF(self, ctx:YAPLParser.MethodDEFContext):
+    # Visit a parse tree produced by YAPLParser#method.
+    def visitMethod(self, ctx:YAPLParser.MethodContext):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        methodName = ctx.OBJECTID()
-        methodType = ctx.TYPEID()
+        methodName = ctx.ID()
+        methodType = ctx.TYPE()
         entry = Function(CURR_ID, methodName, methodType, CURR_SCOPE, CURR_CLASS)
         self.table.addFunction(entry)
         CURR_SCOPE = 2
@@ -51,11 +51,11 @@ class MyYAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#featureDEF.
-    def visitFeatureDEF(self, ctx:YAPLParser.FeatureDEFContext):
+    # Visit a parse tree produced by YAPLParser#attribute.
+    def visitAttribute(self, ctx:YAPLParser.AttributeContext):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        featureName = ctx.OBJECTID()
-        featureType = ctx.TYPEID()
+        featureName = ctx.ID()
+        featureType = ctx.TYPE()
         entry = Attribute(featureName, featureType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
         self.table.addAttribute(entry)
         return self.visitChildren(ctx)
@@ -64,16 +64,132 @@ class MyYAPLVisitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx:YAPLParser.FormalContext):
         global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        formalName = ctx.OBJECTID()
-        formalType = ctx.TYPEID()
+        formalName = ctx.ID()
+        formalType = ctx.TYPE()
         entry = Attribute(formalName, formalType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
         self.table.addAttribute(entry)
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#expr.
-    def visitExpr(self, ctx:YAPLParser.ExprContext):
+    # Visit a parse tree produced by YAPLParser#add.
+    def visitAdd(self, ctx:YAPLParser.AddContext):
         return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#new.
+    def visitNew(self, ctx:YAPLParser.NewContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#negation.
+    def visitNegation(self, ctx:YAPLParser.NegationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#dispatch.
+    def visitDispatch(self, ctx:YAPLParser.DispatchContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#string.
+    def visitString(self, ctx:YAPLParser.StringContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#assignment.
+    def visitAssignment(self, ctx:YAPLParser.AssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#false.
+    def visitFalse(self, ctx:YAPLParser.FalseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#integer.
+    def visitInteger(self, ctx:YAPLParser.IntegerContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#while.
+    def visitWhile(self, ctx:YAPLParser.WhileContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#parenthesis.
+    def visitParenthesis(self, ctx:YAPLParser.ParenthesisContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#equal.
+    def visitEqual(self, ctx:YAPLParser.EqualContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#not.
+    def visitNot(self, ctx:YAPLParser.NotContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#isVoid.
+    def visitIsVoid(self, ctx:YAPLParser.IsVoidContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#function.
+    def visitFunction(self, ctx:YAPLParser.FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#lessThan.
+    def visitLessThan(self, ctx:YAPLParser.LessThanContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#bracket.
+    def visitBracket(self, ctx:YAPLParser.BracketContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#true.
+    def visitTrue(self, ctx:YAPLParser.TrueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#let.
+    def visitLet(self, ctx:YAPLParser.LetContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#divide.
+    def visitDivide(self, ctx:YAPLParser.DivideContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#id.
+    def visitId(self, ctx:YAPLParser.IdContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#lessEqual.
+    def visitLessEqual(self, ctx:YAPLParser.LessEqualContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#multiply.
+    def visitMultiply(self, ctx:YAPLParser.MultiplyContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#ifElse.
+    def visitIfElse(self, ctx:YAPLParser.IfElseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#substract.
+    def visitSubstract(self, ctx:YAPLParser.SubstractContext):
+        return self.visitChildren(ctx)
+
 
 
 del YAPLParser
