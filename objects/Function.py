@@ -5,13 +5,12 @@ class Function:
         name,
         type,
         scope = None,
-        belongsTo = None
+        isFrom = None
     ):
         self.id = id
         self.name = name
         self.type = type
         self.scope = scope
-        self.belongsTo = belongsTo
-
+        self.isFrom = isFrom
     def __str__(self):
-        return '[FUNCTION] -> identifier: %s, type: %s, scope: %s, belongsTo: %s' % (self.name, self.type, self.scope, self.belongsTo)
+        return '[FUNCTION] -> identifier: %s, type: %s, scope: %s, isFrom: %s' % (self.name, self.type, self.scope, self.isFrom)

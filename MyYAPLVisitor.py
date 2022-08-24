@@ -3,19 +3,21 @@ from YAPLVisitor import YAPLVisitor
 
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 from objects.Class import Class
-from objects.Attribute import Attribute
 from objects.Function import Function
+from objects.Attribute import Attribute
+from objects.Error import Error
 
-from tables.SymbolsTable import SymbolsTable
-
-CURR_CLASS = ""
-CURR_METHOD = ""
-CURR_SCOPE = 1
-CURR_ID = 10
+from tables.SymbolsTable import *
 
 class MyYAPLVisitor(YAPLVisitor):
     def __init__(self):
+        super().__init__()
         self.table = SymbolsTable()
+        self.errors = []
+        self.CLASS = ""
+        self.METHOD = ""
+        self.METHOD_NO = 10
+        self.SCOPE = 1
 
     # Visit a parse tree produced by YAPLParser#start.
     def visitStart(self, ctx:YAPLParser.StartContext):
@@ -29,45 +31,84 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#classExpr.
     def visitClassExpr(self, ctx:YAPLParser.ClassExprContext):
-        global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        className = ctx.TYPE()[0]
-        entry = Class(className)
-        self.table.addClass(entry)
-        CURR_CLASS = className
-        CURR_SCOPE = 1
-        CURR_METHOD = None
-        return self.visitChildren(ctx)
+        classIdentifier = str(ctx.TYPE()[0])
+        classParents = ctx.TYPE()
+        if len(classParents) > 1:
+            inheritedClass = str(classParents[1])
+            
+            if not self.table.findClass(inheritedClass):
+                self.errors.append(
+                    Error(
+                        "NameError",
+                        ctx.start.line,
+                        "class '" + inheritedClass + "' is not defined"
+                    )
+                )
+                return "Error"
+        else: inheritedClass = None
+        
+        if inheritedClass:
+            newClass = Class(classIdentifier, inheritedClass)
+        else:
+            newClass = Class(classIdentifier)
+        addition = self.table.addClass(newClass)
+
+        if not addition:
+            self.errors.append(
+                Error(
+                    "NameError",
+                    ctx.start.line,
+                    "class '" + classIdentifier + "' has already been defined in current scope"
+                )
+            )
+            return "Error"
+        else:
+            self.CLASS = classIdentifier
+            self.METHOD = None
+            self.SCOPE = 1
+            return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#method.
     def visitMethod(self, ctx:YAPLParser.MethodContext):
-        global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        methodName = ctx.ID()
-        methodType = ctx.TYPE()
-        entry = Function(CURR_ID, methodName, methodType, CURR_SCOPE, CURR_CLASS)
-        self.table.addFunction(entry)
-        CURR_SCOPE = 2
-        CURR_METHOD = methodName
-        return self.visitChildren(ctx)
+        self.METHOD_NO = self.METHOD_NO + 1
+
+        methodIdentifier = str(ctx.ID())
+        methodType = str(ctx.TYPE())
+        
+        addition = self.table.addFunction(
+            Function(
+                self.METHOD_NO,
+                methodIdentifier,
+                methodType,
+                self.SCOPE,
+                self.CLASS
+            )
+        )
+        
+        self.SCOPE = 2
+        if not addition:
+            self.errors.append(
+                Error(
+                    "NameError",
+                    ctx.ID().getPayload().line,
+                    "method '" + methodIdentifier + "' has already been defined in current scope"
+                )
+            )
+            return "Error"
+        else:
+            self.METHOD = methodIdentifier
+            for child in ctx.formal(): self.visit(child)
+            return self.visit(ctx.expr())
 
 
     # Visit a parse tree produced by YAPLParser#attribute.
     def visitAttribute(self, ctx:YAPLParser.AttributeContext):
-        global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        featureName = ctx.ID()
-        featureType = ctx.TYPE()
-        entry = Attribute(featureName, featureType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
-        self.table.addAttribute(entry)
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx:YAPLParser.FormalContext):
-        global CURR_CLASS, CURR_METHOD, CURR_SCOPE
-        formalName = ctx.ID()
-        formalType = ctx.TYPE()
-        entry = Attribute(formalName, formalType, CURR_SCOPE, CURR_CLASS, CURR_METHOD)
-        self.table.addAttribute(entry)
         return self.visitChildren(ctx)
 
 
@@ -118,7 +159,7 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#parenthesis.
     def visitParenthesis(self, ctx:YAPLParser.ParenthesisContext):
-        return self.visitChildren(ctx)
+       return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#equal.
@@ -128,7 +169,7 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#not.
     def visitNot(self, ctx:YAPLParser.NotContext):
-        return self.visitChildren(ctx)
+       return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#isVoid.
@@ -143,7 +184,7 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#lessThan.
     def visitLessThan(self, ctx:YAPLParser.LessThanContext):
-        return self.visitChildren(ctx)
+       return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#bracket.
@@ -158,6 +199,33 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#let.
     def visitLet(self, ctx:YAPLParser.LetContext):
+        self.SCOPE = self.SCOPE + 1
+
+        for x in range(len(ctx.ID())):
+            newVariableIdentifier = str(ctx.ID()[x])
+            newVariableType = str(ctx.TYPE()[x])
+            
+            addition = self.table.AddAttribute(
+                Attribute(
+                    newVariableIdentifier,
+                    newVariableType,
+                    self.SCOPE,
+                    self.CLASS,
+                    self.METHOD_NO
+                )
+            )
+
+            if not addition:
+                self.errors.append(
+                    Error(
+                        "NameError",
+                        ctx.ID().getPayload().line,
+                        "variable " + newVariableIdentifier + " has already been defined in current scope"
+                    )
+                )
+                return "Error"
+
+        self.SCOPE = self.SCOPE - 1
         return self.visitChildren(ctx)
 
 
@@ -168,7 +236,7 @@ class MyYAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#id.
     def visitId(self, ctx:YAPLParser.IdContext):
-        return self.visitChildren(ctx)
+       return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#lessEqual.
@@ -189,6 +257,7 @@ class MyYAPLVisitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#substract.
     def visitSubstract(self, ctx:YAPLParser.SubstractContext):
         return self.visitChildren(ctx)
+
 
 
 

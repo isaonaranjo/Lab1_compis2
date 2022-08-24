@@ -6,14 +6,13 @@ class Attribute:
         scope = None,
         insideClass = None,
         insideMethod = None,
-        isParameter = False
+        isParameterOfFunction = False
     ):
         self.name = name
         self.type = type
         self.scope = scope
         self.insideClass = insideClass
         self.insideMethod = insideMethod
-        self.isParameter = isParameter
-
+        self.isParameterOfFunction = isParameterOfFunction
     def __str__(self):
-        return '[ATTRIBUTE] -> identifier: %s, type: %s, scope: %s, insideClass: %s, insideMethod: %s, isParameter: %s' % (self.name, self.type, self.scope, self.insideClass, self.insideMethod, self.isParameter)
+        return '[ATTRIBUTE] -> identifier: %s, type: %s, scope: %s, insideClass: %s, insideMethod: %s, isParameterOfFunction: %s' % (self.name, self.type, self.scope, self.insideClass, self.insideMethod, self.isParameterOfFunction)
