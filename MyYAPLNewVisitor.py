@@ -374,7 +374,21 @@ class MyYAPLNewVisitor(YAPLVisitor):
     def visitEqual(self, ctx:YAPLParser.EqualContext):
         operands = [self.visit(operand) for operand in ctx.expr()]
 
+        # Case Int
         if operands[0] == "Int" and operands[1] == "Int": return "Bool"
+        elif operands[0] == "Int" and operands[1] == "String": return "Bool"
+        elif operands[0] == "String" and operands[1] == "Int": return "Bool"
+        elif operands[0] == "Bool" and operands[1] == "Int": return "Bool"
+        elif operands[0] == "Int" and operands[1] == "Bool": return "Bool"
+
+        # Case String
+        elif operands[0] == "String" and operands[1] == "String": return "Bool"
+        elif operands[0] == "String" and operands[1] == "Bool": return "Bool"
+        elif operands[0] == "Bool" and operands[1] == "String": return "Bool"
+
+        # Case Bool
+        elif operands[0] == "Bool" and operands[1] == "Bool": return "Bool"
+
         else:
             self.errors.append(
                 Error(
