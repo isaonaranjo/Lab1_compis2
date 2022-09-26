@@ -83,53 +83,12 @@ class MyYAPLNewVisitor(YAPLVisitor):
 
 
     def visitAttribute(self, ctx:YAPLParser.AttributeContext):
-        attributeIdentifier = str(ctx.ID())
-        attributeType = str(ctx.TYPE())
-
-        newAttribute = Attribute(attributeIdentifier, attributeType, self.SCOPE, self.CLASS, self.METHOD_NO) if self.METHOD else Attribute(attributeIdentifier, attributeType, self.SCOPE, self.CLASS, None)
-        
-        addition = self.table.AddAttribute(newAttribute)
-
-        if not addition:
-            self.errors.append(
-                 Error(
-                    "NameError",
-                    ctx.ID().getPayload().line,
-                    "attribute '" + attributeIdentifier + "' has already been defined in current scope"
-                    )
-            )
-            return "Error"
-        else:
-            return self.visitChildren(ctx)
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx:YAPLParser.FormalContext):
-        parameterIdentifier = str(ctx.ID())
-        parameterType = str(ctx.TYPE())
-
-        result  = self.table.AddAttribute(
-            Attribute(
-                parameterIdentifier,
-                parameterType,
-                self.SCOPE,
-                self.CLASS,
-                self.METHOD_NO,
-                True
-            )
-        )
-        
-        if not result:
-            self.errors.append(
-                Error(
-                    "NameError",
-                    ctx.ID().getPayload().line,
-                    "parameter '" + parameterIdentifier + "' already defined"
-                )
-            )
-            return "Error"
-        else:
-            return self.visitChildren(ctx)  
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#add.

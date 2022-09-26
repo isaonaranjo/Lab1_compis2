@@ -5,7 +5,7 @@ from utils.predefinedAttributes import *
 
 class SymbolsTable:
     def __init__(self):
-        self.classes = [OBJECT_CLASS, IO_CLASS, INT_CLASS, STRING_CLASS, BOOL_CLASS]
+        self.classes = [IO_CLASS, OBJECT_CLASS, INT_CLASS, STRING_CLASS, BOOL_CLASS]
         self.functions = [ABORT, IN_INT, LENGTH, OUT_INT, SUBSTRING, TYPE_NAME, COPY, OUT_STRING, OUT_INT, IN_STRING, IN_INT, LENGTH, CONCAT, SUBSTRING]
         self.attributes = [OUT_STRING_ATTR, OUT_INT_ATTR, CONCAT_ATTR, SUBSTRING_START_ATTR, SUBSTRING_END_ATTR]
         self.types = [INT, STRING, BOOL, VOID, OBJECT]
@@ -23,10 +23,16 @@ class SymbolsTable:
                 return myClass
         return None
 
+    def getFunctionWithId(self, id):
+        for myFunction in self.functions:
+            if myFunction.id == id:
+                return myFunction
+        return None
+
     def getFunctionWithName(self, name, isFrom):
         for myFunction in self.functions:
             if myFunction.name == name and myFunction.isFrom == isFrom:
-                return myFunction                
+                return myFunction
         return None
 
     def addFunction(self, Function):
@@ -56,6 +62,14 @@ class SymbolsTable:
                 if myAttribute.isParameterOfFunction:
                     params.append(myAttribute)
         return params
+
+    def findNonParamsOfFunction(self, insideMethod):
+        results = []
+        for myAttribute in self.attributes:
+            if myAttribute.insideMethod == insideMethod:
+                if not myAttribute.isParameterOfFunction:
+                    results.append(myAttribute)
+        return results
 
     def addType(self, type):
         self.types.append(type)

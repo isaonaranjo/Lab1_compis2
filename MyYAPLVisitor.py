@@ -7,6 +7,7 @@ from objects.Function import Function
 from objects.Attribute import Attribute
 from objects.Error import Error
 
+from utils.predefinedTypes import *
 from tables.SymbolsTable import *
 
 class MyYAPLVisitor(YAPLVisitor):
@@ -18,6 +19,8 @@ class MyYAPLVisitor(YAPLVisitor):
         self.METHOD = ""
         self.METHOD_NO = 10
         self.SCOPE = 1
+        self.OFFSET = 0
+        self.primitiveTypesSizes = PRIMITIVE_TYPE_SIZES
 
     # Visit a parse tree produced by YAPLParser#start.
     def visitStart(self, ctx:YAPLParser.StartContext):
@@ -46,11 +49,15 @@ class MyYAPLVisitor(YAPLVisitor):
                 )
                 return "Error"
         else: inheritedClass = None
+
+        self.CLASS = classIdentifier
+        self.METHOD = None
+        self.SCOPE = 1
+        self.OFFSET = 0
+
+        children = [self.visit(node) for node in ctx.feature()]
         
-        if inheritedClass:
-            newClass = Class(classIdentifier, inheritedClass)
-        else:
-            newClass = Class(classIdentifier)
+        newClass = Class(classIdentifier, inheritedClass, size = sum(children)) if inheritedClass else Class(classIdentifier, size = sum(children))
         addition = self.table.addClass(newClass)
 
         if not addition:
@@ -62,12 +69,6 @@ class MyYAPLVisitor(YAPLVisitor):
                 )
             )
             return "Error"
-        else:
-            self.CLASS = classIdentifier
-            self.METHOD = None
-            self.SCOPE = 1
-            return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by YAPLParser#method.
     def visitMethod(self, ctx:YAPLParser.MethodContext):
@@ -98,18 +99,74 @@ class MyYAPLVisitor(YAPLVisitor):
             return "Error"
         else:
             self.METHOD = methodIdentifier
+            self.OFFSET = 0
             for child in ctx.formal(): self.visit(child)
-            return self.visit(ctx.expr())
+            self.visit(ctx.expr())
+            return 0
 
 
     # Visit a parse tree produced by YAPLParser#attribute.
     def visitAttribute(self, ctx:YAPLParser.AttributeContext):
-        return self.visitChildren(ctx)
+        attributeIdentifier = str(ctx.ID())
+        attributeType = str(ctx.TYPE())
+
+        size = self.primitiveTypesSizes[attributeType] if attributeType in self.primitiveTypesSizes else 1
+
+        if self.METHOD:
+            newAttribute = Attribute(attributeIdentifier, attributeType, self.SCOPE, self.CLASS, self.METHOD_NO, size = size, offset = self.OFFSET)
+            self.OFFSET += size
+        else:
+            newAttribute = Attribute(attributeIdentifier, attributeType, self.SCOPE, self.CLASS, None, size = size, offset = self.OFFSET)
+            self.OFFSET += size
+
+        addition = self.table.AddAttribute(newAttribute)
+
+        if not addition:
+            self.errors.append(
+                 Error(
+                    "NameError",
+                    ctx.ID().getPayload().line,
+                    "attribute '" + attributeIdentifier + "' has already been defined in current scope"
+                    )
+            )
+            return "Error"
+        else:
+            self.visitChildren(ctx)
+            return size
 
 
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx:YAPLParser.FormalContext):
-        return self.visitChildren(ctx)
+        parameterIdentifier = str(ctx.ID())
+        parameterType = str(ctx.TYPE())
+
+        size = self.primitiveTypesSizes[parameterType] if parameterType in self.primitiveTypesSizes else 1
+
+        newAttribute = Attribute(
+                parameterIdentifier,
+                parameterType,
+                self.SCOPE,
+                self.CLASS,
+                self.METHOD_NO,
+                True,
+                size,
+                self.OFFSET
+            )
+
+        self.OFFSET += size
+        addition = self.table.AddAttribute(newAttribute)
+        
+        if not addition:
+            self.errors.append(
+                Error(
+                    "NameError",
+                    ctx.ID().getPayload().line,
+                    "parameter '" + parameterIdentifier + "' already defined"
+                )
+            )
+            return "Error"
+        else:
+            return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#add.
@@ -204,6 +261,7 @@ class MyYAPLVisitor(YAPLVisitor):
         for x in range(len(ctx.ID())):
             newVariableIdentifier = str(ctx.ID()[x])
             newVariableType = str(ctx.TYPE()[x])
+            size = self.primitiveTypesSizes[newVariableType] if newVariableType in self.primitiveTypesSizes else 1
             
             addition = self.table.AddAttribute(
                 Attribute(
@@ -211,9 +269,13 @@ class MyYAPLVisitor(YAPLVisitor):
                     newVariableType,
                     self.SCOPE,
                     self.CLASS,
-                    self.METHOD_NO
+                    self.METHOD_NO,
+                    size = size,
+                    offset = self.OFFSET
                 )
             )
+
+            self.OFFSET += size
 
             if not addition:
                 self.errors.append(
@@ -224,9 +286,9 @@ class MyYAPLVisitor(YAPLVisitor):
                     )
                 )
                 return "Error"
-
+        self.visit(ctx.expr()[-1])
         self.SCOPE = self.SCOPE - 1
-        return self.visitChildren(ctx)
+        return 0
 
 
     # Visit a parse tree produced by YAPLParser#divide.
