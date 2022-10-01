@@ -1,4 +1,4 @@
-// Generated from /home/luis/Desktop/college/last-semester/compilers/Lab1_compis2/YAPL.g4 by ANTLR 4.9.2
+// Generated from /home/luis/Desktop/college/last-semester/compilers/proyecto-2-compiladores/YAPL.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

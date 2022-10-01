@@ -4,7 +4,7 @@ BOOL = "Bool"
 VOID = "Void"
 OBJECT = "Object"
 PRIMITIVE_TYPE_SIZES = {
-    INT: 8, 
-    STRING: 8, 
-    BOOL:1
+    INT: 4,
+    STRING: 1,
+    BOOL: 1
 }

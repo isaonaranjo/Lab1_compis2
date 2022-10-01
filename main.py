@@ -7,6 +7,7 @@ from YAPLVisitor import YAPLVisitor
 from antlr4.tree.Trees import Trees
 from MyYAPLVisitor import MyYAPLVisitor
 from MyYAPLNewVisitor import MyYAPLNewVisitor
+from ThreeAddressCodeVisitor import ThreeAddressCodeVisitor
 from objects.Error import Error
 
 if __name__ == "__main__":
@@ -29,18 +30,18 @@ if __name__ == "__main__":
     myYAPLNewVisitor = MyYAPLNewVisitor(myYAPLVisitor.table, myYAPLVisitor.errors)
     myYAPLNewVisitor.visit(tree)
 
-    print(30*"=" + " Symbols Table " + 30*"=")
-    print("\n")
-    for myClass in myYAPLNewVisitor.table.classes:
-        print(myClass)
-    print("\n")
-    for myFunction in myYAPLNewVisitor.table.attributes:
-        print(myFunction)
-    print("\n")
-    for myAttribute in myYAPLNewVisitor.table.functions:
-        print(myAttribute)
-    print("\n")
-    print(30*"=" + " End of Table " + 30*"=")
+    # print(30*"=" + " Symbols Table " + 30*"=")
+    # print("\n")
+    # for myClass in myYAPLNewVisitor.table.classes:
+    #     print(myClass)
+    # print("\n")
+    # for myFunction in myYAPLNewVisitor.table.attributes:
+    #     print(myFunction)
+    # print("\n")
+    # for myAttribute in myYAPLNewVisitor.table.functions:
+    #     print(myAttribute)
+    # print("\n")
+    # print(30*"=" + " End of Table " + 30*"=")
     
     
     if not myYAPLNewVisitor.table.findClass("Main"):
@@ -61,8 +62,18 @@ if __name__ == "__main__":
             )
         )
 
+    stringOfErrors = ''
+
     if len(myYAPLNewVisitor.errors) > 0:
         for myError in myYAPLNewVisitor.errors:
-            print(str(myError))
+            stringOfErrors += str(myError) + "\n"
     else:
-        print("Compiled successfully!")
+        stringOfErrors += "Compiled successfully!"
+
+    threeAddressCodeVisitor = ThreeAddressCodeVisitor(myYAPLNewVisitor.table)
+    threeAddressCode = threeAddressCodeVisitor.visit(tree)
+
+    stringOfThreeAddressCode = str(threeAddressCode)
+
+    print(stringOfErrors)
+    print(stringOfThreeAddressCode)
