@@ -83,7 +83,7 @@ class ThreeAddressCodeVisitor(ParseTreeVisitor):
         returnQuadruple = Quadruple(
             '=',
             childExpr.memAddress,
-            "PROCEDURERETURN"
+            "PROCEDURE_RETURN"
         )
 
         quadruplesStack.addQuadruples([returnQuadruple])
@@ -249,7 +249,7 @@ class ThreeAddressCodeVisitor(ParseTreeVisitor):
             None
         )
         quadruplesStack.addQuadruples([callQuadruple])
-        quadruplesStack.changeMemAddress("PROCEDURERETURN")
+        quadruplesStack.changeMemAddress("PROCEDURE_RETURN")
         
         return quadruplesStack
 
@@ -504,7 +504,7 @@ class ThreeAddressCodeVisitor(ParseTreeVisitor):
             None
         )
         quadruplesStack.addQuadruples([callQuadruple])
-        quadruplesStack.changeMemAddress("PROCEDURERETURN")
+        quadruplesStack.changeMemAddress("PROCEDURE_RETURN")
 
         return quadruplesStack
 

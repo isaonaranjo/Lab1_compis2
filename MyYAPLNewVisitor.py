@@ -17,7 +17,7 @@ class MyYAPLNewVisitor(YAPLVisitor):
         self.METHOD = ""
         self.METHOD_NO = 10
         self.SCOPE = 1
-    
+
     def getInheritance(self, givenClass, wantedClass):
         if not givenClass:
             return False
@@ -29,6 +29,42 @@ class MyYAPLNewVisitor(YAPLVisitor):
         if wantedClass not in family: return False
         else: return True
 
+    def buildErrorString(self):
+        if not self.table.findClass("Main"):
+            self.errors.append(
+                Error(
+                    "SyntaxError",
+                    "0",
+                    "YAPL programs must have a Main class"
+                )
+            )
+    
+        if not self.table.getFunctionWithName("main", "Main"):
+            self.errors.append(
+                Error(
+                    "SyntaxError",
+                    "0",
+                    "Main class must have a main method"
+                )
+            )
+
+        if self.table.findClass("Main").inheritsFrom != None:
+            self.errors.append(
+                Error(
+                    "SyntaxError",
+                    "1",
+                    "Main class can't inherit from any other class"
+                )
+            )
+        stringOfErrors = ''
+
+        if len(self.errors) > 0:
+            for myError in self.errors:
+                stringOfErrors += str(myError) + "\n"
+        else:
+            stringOfErrors += "Compiled successfully!"
+
+        return stringOfErrors
 
     # Visit a parse tree produced by YAPLParser#start.
     def visitStart(self, ctx:YAPLParser.StartContext):

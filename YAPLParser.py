@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,41,200,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,1,
+        4,1,42,200,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,1,
         0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,21,8,1,1,2,1,2,1,2,1,2,3,2,27,8,2,
         1,2,1,2,1,2,1,2,5,2,33,8,2,10,2,12,2,36,9,2,1,2,1,2,1,3,1,3,1,3,
         1,3,1,3,5,3,45,8,3,10,3,12,3,48,9,3,3,3,50,8,3,1,3,1,3,1,3,1,3,1,
@@ -110,7 +110,8 @@ class YAPLParser ( Parser ):
                       "THEN", "FI", "WHILE", "LOOP", "POOL", "LET", "IN", 
                       "NEW", "ISVOID", "ADD", "MINUS", "MULT", "DIV", "LT", 
                       "LE", "EQ", "NOT", "STRINGS", "INTEGERS", "TYPE", 
-                      "ID", "ASIGNOPP", "ONE_LINE_COMMENT", "WHITESPACE" ]
+                      "ID", "ASIGNOPP", "ONE_LINE_COMMENT", "MULTILINE_COMMENT", 
+                      "WHITESPACE" ]
 
     RULE_start = 0
     RULE_program = 1
@@ -163,7 +164,8 @@ class YAPLParser ( Parser ):
     ID=38
     ASIGNOPP=39
     ONE_LINE_COMMENT=40
-    WHITESPACE=41
+    MULTILINE_COMMENT=41
+    WHITESPACE=42
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)

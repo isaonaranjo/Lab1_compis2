@@ -29,51 +29,16 @@ if __name__ == "__main__":
 
     myYAPLNewVisitor = MyYAPLNewVisitor(myYAPLVisitor.table, myYAPLVisitor.errors)
     myYAPLNewVisitor.visit(tree)
-
-    # print(30*"=" + " Symbols Table " + 30*"=")
-    # print("\n")
-    # for myClass in myYAPLNewVisitor.table.classes:
-    #     print(myClass)
-    # print("\n")
-    # for myFunction in myYAPLNewVisitor.table.attributes:
-    #     print(myFunction)
-    # print("\n")
-    # for myAttribute in myYAPLNewVisitor.table.functions:
-    #     print(myAttribute)
-    # print("\n")
-    # print(30*"=" + " End of Table " + 30*"=")
     
-    
-    if not myYAPLNewVisitor.table.findClass("Main"):
-        myYAPLNewVisitor.errors.append(
-            Error(
-                "SyntaxError",
-                "0",
-                "YAPL programas must have a Main class"
-            )
-        )
-    
-    if not myYAPLNewVisitor.table.getFunctionWithName("main", "Main"):
-        myYAPLNewVisitor.errors.append(
-            Error(
-                "SyntaxError",
-                "0",
-                "Main class must have a main method"
-            )
-        )
+    stringOfErrors = myYAPLNewVisitor.buildErrorString()
 
-    stringOfErrors = ''
-
-    if len(myYAPLNewVisitor.errors) > 0:
-        for myError in myYAPLNewVisitor.errors:
-            stringOfErrors += str(myError) + "\n"
+    stringOfThreeAddressCode = ''
+    if (len(myYAPLNewVisitor.errors) == 0):
+        threeAddressCodeVisitor = ThreeAddressCodeVisitor(myYAPLNewVisitor.table)
+        threeAddressCode = threeAddressCodeVisitor.visit(tree)
+        stringOfThreeAddressCode = str(threeAddressCode)
     else:
-        stringOfErrors += "Compiled successfully!"
-
-    threeAddressCodeVisitor = ThreeAddressCodeVisitor(myYAPLNewVisitor.table)
-    threeAddressCode = threeAddressCodeVisitor.visit(tree)
-
-    stringOfThreeAddressCode = str(threeAddressCode)
+        stringOfThreeAddressCode = 'Compiler Error: Cant generate 3-address code if there are syntax errors in loaded file, please fix them and try again'
 
     print(stringOfErrors)
     print(stringOfThreeAddressCode)

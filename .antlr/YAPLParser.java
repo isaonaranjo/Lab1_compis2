@@ -1,4 +1,4 @@
-// Generated from /home/luis/Desktop/college/last-semester/compilers/proyecto-2-compiladores/YAPL.g4 by ANTLR 4.9.2
+// Generated from /home/luis/Desktop/college/last-semester/compilers/proyecto-2-compiladores-v1/YAPL.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -20,7 +20,8 @@ public class YAPLParser extends Parser {
 		T__9=10, T__10=11, CLASS=12, INHERITS=13, TRUE=14, FALSE=15, IF=16, ELSE=17, 
 		THEN=18, FI=19, WHILE=20, LOOP=21, POOL=22, LET=23, IN=24, NEW=25, ISVOID=26, 
 		ADD=27, MINUS=28, MULT=29, DIV=30, LT=31, LE=32, EQ=33, NOT=34, STRINGS=35, 
-		INTEGERS=36, TYPE=37, ID=38, ASIGNOPP=39, ONE_LINE_COMMENT=40, WHITESPACE=41;
+		INTEGERS=36, TYPE=37, ID=38, ASIGNOPP=39, ONE_LINE_COMMENT=40, MULTILINE_COMMENT=41, 
+		WHITESPACE=42;
 	public static final int
 		RULE_start = 0, RULE_program = 1, RULE_classExpr = 2, RULE_feature = 3, 
 		RULE_formal = 4, RULE_expr = 5;
@@ -46,7 +47,7 @@ public class YAPLParser extends Parser {
 			"CLASS", "INHERITS", "TRUE", "FALSE", "IF", "ELSE", "THEN", "FI", "WHILE", 
 			"LOOP", "POOL", "LET", "IN", "NEW", "ISVOID", "ADD", "MINUS", "MULT", 
 			"DIV", "LT", "LE", "EQ", "NOT", "STRINGS", "INTEGERS", "TYPE", "ID", 
-			"ASIGNOPP", "ONE_LINE_COMMENT", "WHITESPACE"
+			"ASIGNOPP", "ONE_LINE_COMMENT", "MULTILINE_COMMENT", "WHITESPACE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -1148,7 +1149,7 @@ public class YAPLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3+\u00ca\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3,\u00ca\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3"+
 		"\5\3\27\n\3\3\4\3\4\3\4\3\4\5\4\35\n\4\3\4\3\4\3\4\3\4\7\4#\n\4\f\4\16"+
 		"\4&\13\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\7\5/\n\5\f\5\16\5\62\13\5\5\5\64"+
