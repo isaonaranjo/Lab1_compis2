@@ -50,7 +50,7 @@ class ThreeAddressCodeVisitor(ParseTreeVisitor):
 
         classQuadruple = Quadruple(
             'LBL',
-            f'DECLARE {currentClassName}',
+            f'DECLARE_{currentClassName}',
             None
         )
         featureQuadruples = [self.visit(exprNode) for exprNode in ctx.feature()]
