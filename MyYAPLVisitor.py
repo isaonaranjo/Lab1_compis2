@@ -38,6 +38,25 @@ class MyYAPLVisitor(YAPLVisitor):
         classParents = ctx.TYPE()
         if len(classParents) > 1:
             inheritedClass = str(classParents[1])
+            if (inheritedClass == classIdentifier):
+                self.errors.append(
+                    Error(
+                        "SyntaxError",
+                        ctx.start.line,
+                        "Class can't inherit from itself"
+                    )
+                )
+                return "Error"
+            
+            if (inheritedClass == "Int" or inheritedClass == "Bool" or inheritedClass == "String"):
+                self.errors.append(
+                    Error(
+                        "TypeError",
+                        ctx.start.line,
+                        "Class can't inherit from primitive types"
+                    )
+                )
+                return "Error"
             
             if not self.table.findClass(inheritedClass):
                 self.errors.append(
@@ -48,6 +67,7 @@ class MyYAPLVisitor(YAPLVisitor):
                     )
                 )
                 return "Error"
+
         else: inheritedClass = None
 
         self.CLASS = classIdentifier

@@ -48,7 +48,7 @@ class MyYAPLNewVisitor(YAPLVisitor):
                 )
             )
 
-        if self.table.findClass("Main").inheritsFrom != None:
+        if self.table.findClass("Main").inheritsFrom != None and self.table.findClass("Main").inheritsFrom != 'IO':
             self.errors.append(
                 Error(
                     "SyntaxError",
@@ -56,6 +56,7 @@ class MyYAPLNewVisitor(YAPLVisitor):
                     "Main class can't inherit from any other class"
                 )
             )
+        
         stringOfErrors = ''
 
         if len(self.errors) > 0:

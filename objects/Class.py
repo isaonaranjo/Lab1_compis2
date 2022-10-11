@@ -2,7 +2,7 @@ class Class:
     def __init__(
         self,
         name,
-        inheritsFrom = None,
+        inheritsFrom = 'IO',
         size = 0
     ):
         self.name = name
