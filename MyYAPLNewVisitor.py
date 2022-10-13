@@ -38,24 +38,24 @@ class MyYAPLNewVisitor(YAPLVisitor):
                     "YAPL programs must have a Main class"
                 )
             )
-    
-        if not self.table.getFunctionWithName("main", "Main"):
-            self.errors.append(
-                Error(
-                    "SyntaxError",
-                    "0",
-                    "Main class must have a main method"
+        else: 
+            if not self.table.getFunctionWithName("main", "Main"):
+                self.errors.append(
+                    Error(
+                        "SyntaxError",
+                        "0",
+                        "Main class must have a main method"
+                    )
                 )
-            )
 
-        if self.table.findClass("Main").inheritsFrom != None and self.table.findClass("Main").inheritsFrom != 'IO':
-            self.errors.append(
-                Error(
-                    "SyntaxError",
-                    "1",
-                    "Main class can't inherit from any other class"
+            if self.table.findClass("Main").inheritsFrom != None and self.table.findClass("Main").inheritsFrom != 'IO':
+                self.errors.append(
+                    Error(
+                        "SyntaxError",
+                        "1",
+                        "Main class can't inherit from any other class"
+                    )
                 )
-            )
         
         stringOfErrors = ''
 
