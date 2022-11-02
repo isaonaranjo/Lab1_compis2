@@ -13,36 +13,46 @@ from objects.Error import Error
 import tkinter as tk
 from tkinter import filedialog as fd
 
+# F5F05C
+
 def grafica():
     gui = tk.Tk()
-    boton = tk.Frame(gui)
-    codi = tk.Frame(gui)
-    gui['bg'] = '#0059b3'
-    boton.pack()
-    codi.pack(fill = tk.X)
+    gui.geometry("1280x1500")
+    button = tk.Frame(gui)
+    code = tk.Frame(gui)
+    gui['bg'] = '#080808'
+    button.pack()
+    code.pack(fill = tk.X)
     gui.title("Proyecto Compiladores 2")
-    usuario = tk.Text(codi)
-    windowThreeAddressCode = tk.Text(codi)
-    windowErrors = tk.Text(width = 100)
-    compilar = tk.Button(boton, text="Compile", command=lambda: main(usuario.get("1.0", tk.END), windowErrors, windowThreeAddressCode))
-    carg = tk.Button(boton, text="Load File", command=lambda: cargar(usuario))
-    compilar.pack(side=tk.RIGHT, padx=15, pady=20)
-    compilar.configure(font=("Comic Sans MS", 11))
-    carg.pack(side=tk.LEFT, padx=15, pady=20)
-    carg.configure(font=("Comic Sans MS", 11))
-    usuario.pack(side=tk.LEFT,fill=tk.X)
+    user = tk.Text(code)
+    user['bg'] = '#080808'
+    user.config(fg="#F5F05C")
+    windowThreeAddressCode = tk.Text(code)
+    windowThreeAddressCode['bg'] = '#080808'
+    windowThreeAddressCode.config(fg="#18C6F5")
+    windowErrors = tk.Text(width=200)
+    windowErrors['bg'] = '#080808'
+    windowErrors.config(fg="#5CF577")
+    compile = tk.Button(button, text="Compile", command=lambda: main(user.get("1.0", tk.END), windowErrors, windowThreeAddressCode))
+    load = tk.Button(button, text="Load File", command=lambda: loadfile(user))
+    compile.pack(side=tk.RIGHT, padx=15, pady=20)
+    compile.configure(font=("Comic Sans MS", 11))
+    compile.config(fg="#080808")
+    load.pack(side=tk.LEFT, padx=15, pady=20)
+    load.configure(font=("Comic Sans MS", 11))
+    load.config(fg="#080808")
+    user.pack(side=tk.LEFT,fill=tk.X)
     windowThreeAddressCode.pack(side=tk.LEFT,fill=tk.X)
     windowErrors.pack(fill=tk.Y)
-    
     gui.mainloop()
 
 
-def cargar(usuarioIngui):
-    usuarioIngui.delete("1.0", tk.END)
+def loadfile(userIngui):
+    userIngui.delete("1.0", tk.END)
     filename = fd.askopenfilename(initialdir = os.getcwd(), title = "Select a file to upload")
     with open(filename, 'r') as f:
         lines = f.read()
-        usuarioIngui.insert(tk.END, lines)
+        userIngui.insert(tk.END, lines)
 
 
 def main(program, windowErrors, windowThreeAddressCode):
