@@ -13,6 +13,7 @@ from objects.QuadruplesStack import QuadruplesStack
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
 class ThreeAddressCodeVisitor(ParseTreeVisitor):
+    
     def __init__(self, table):
         super().__init__()
         self.table = table

@@ -55,6 +55,25 @@ def loadfile(userIngui):
         userIngui.insert(tk.END, lines)
 
 
+
+def tablePrint(visitor):
+    print("==============================SYMBOL TABLE==============================")
+    print("==============================ATTRIBUTE TABLE==============================")
+    for i in visitor.attributeTable.entries:
+        print(i)
+    print("==============================TYPES TABLE==============================")
+    for i in visitor.typesTable.entries:
+        print(i)
+    print("==============================CLASS TABLE==============================")
+    for i in visitor.classTable.entries:
+        print(i)
+    print("==============================FUNCTION TABLE==============================")
+    for i in visitor.functionTable.entries:
+        print(i)
+    print("==============================END==============================")
+
+
+
 def main(program, windowErrors, windowThreeAddressCode):
     windowErrors.delete("1.0", tk.END)
     windowThreeAddressCode.delete("1.0", tk.END)
@@ -70,6 +89,8 @@ def main(program, windowErrors, windowThreeAddressCode):
     myYAPLVisitor = MyYAPLVisitor()
     myYAPLVisitor.visit(tree)
 
+    #myYAPLNewVisitor = MyYAPLNewVisitor(myYAPLVisitor.classtable, firstVisitor.functionTable, firstVisitor.attributeTable, firstVisitor.typesTable, firstVisitor.foundErrors)
+    #visitor.visit(tree)
     myYAPLNewVisitor = MyYAPLNewVisitor(myYAPLVisitor.table, myYAPLVisitor.errors)
     myYAPLNewVisitor.visit(tree)
     

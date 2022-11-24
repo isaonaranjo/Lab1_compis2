@@ -8,9 +8,10 @@ from objects.Attribute import Attribute
 from objects.Error import Error
 
 from utils.predefinedTypes import *
-from tables.SymbolsTable import *
+from tables.AllTables import *
 
 class MyYAPLVisitor(YAPLVisitor):
+
     def __init__(self):
         super().__init__()
         self.table = SymbolsTable()

@@ -6,7 +6,7 @@ from objects.Attribute import Attribute
 from objects.Error import Error
 
 
-from tables.SymbolsTable import *
+from tables.AllTables import *
 
 class MyYAPLNewVisitor(YAPLVisitor):
     def __init__(self, table, errors):
